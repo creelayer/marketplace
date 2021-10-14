@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  db:
+    build:
+      context: ../db
+    container_name: commerce_core_db
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: kit
+    volumes:
+      - ./db/data:/var/lib/postgresql/data
+    ports:
+      - 5434:5432
