@@ -3,12 +3,25 @@ version: "3"
 services:
   db:
     build:
-      context: ../db
-    container_name: commerce_core_db
+      context: ./db
+    container_name: marketplace_core_db
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: kit
     volumes:
       - ./db/data:/var/lib/postgresql/data
     ports:
-      - 5434:5432
+      - "5434:5432"
+
+  front:
+    build:
+      context: ./front
+    container_name: marketplace_front
+    volumes:
+      - ./front/www/package.json:/var/www/package.json
+      - ./front/www/node_modules:/var/www/node_modules
+      - ./front/www/vue.config.js:/var/www/vue.config.js
+      - ./front/www/public/index.html:/var/www/public/index.html
+      - ./front/www/src:/var/www/src
+    ports:
+      - "8080:8080"
