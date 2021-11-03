@@ -1,9 +1,13 @@
 <template>
-  <h1 v-if="product">{{product.name}}</h1>
+  <div class="container-xxl">
+    <h1 v-if="product">{{ product.name }}</h1>
+    <img v-bind:src="preview(product)" class="img-preview">
+  </div>
 </template>
 
 <script>
 import Http from "@/js/Http";
+import Config from '@/main.config';
 
 export default {
   name: "Product",
@@ -24,10 +28,17 @@ export default {
             this.product = res.content;
           });
     },
+    preview: function (product) {
+      return Config.IMAGE.DOMAIN + '/files/' + Config.IMAGE.PRODUCT_PREVIEW + '/' + product.image
+    }
   }
 }
 </script>
 
 <style scoped>
+
+.img-preview{
+  max-width: 350px;
+}
 
 </style>

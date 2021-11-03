@@ -1,0 +1,14 @@
+@media (min-width: 1400px) {
+    .container-xxl {
+        max-width: 1620px;
+    }
+}
+
+body{
+    font-size: 14px;
+    background: #fafafa;
+}
+
+a{
+    color: #3b6d9a;
+}

@@ -1,12 +1,14 @@
 <template>
   <form>
-    <div v-for="(group,key) in filter" :key="key">
-      <label>{{ key }}</label>
+    <div class="filter-item" v-for="(group,key) in filter" :key="key">
+      <div class="label">{{ key }}</div>
       <ul>
         <li v-for="item in group" :key="item.id">
-          <input type="checkbox" v-bind:id="'f'+item.id" v-bind:value="item.id" v-model="checked"
+          <input class="regular-checkbox" type="checkbox" v-bind:id="'f'+item.id" v-bind:value="item.id"
+                 v-model="checked"
                  v-on:change="onFilterClick" :disabled="item.count === 0">
-          <label v-bind:for="'f'+item.id">{{ item.name }} ({{ item.count }})</label>
+          <label v-bind:for="'f'+item.id" v-bind:style="item.count === 0 ? 'opacity:0.6':''"><span/>{{ item.name }}
+            ({{ item.count }})</label>
         </li>
       </ul>
     </div>
@@ -61,7 +63,7 @@ export default {
     },
     onFilterClick: function () {
       let request = {name: 'catalog-filter', alias: this.alias};
-      if (this.checked.length) request.query = {q: this.checked.join('-')};
+      if (this.checked.length) request.query = {q: this.checked.sort().join('-')};
       this.$router.push(request);
     },
     _getUrl: function (link, query = {}) {
@@ -99,12 +101,36 @@ export default {
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 
+.filter-item {
+  box-shadow: 0 0 0 1px #ededed;
+  background-color: #fff;
+  padding: 15px;
+}
+
+.filter-item .label {
+  color: #3b6d9a;
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+
 ul {
   list-style: none;
+  padding: 0;
 }
 
 ul li {
+  border-radius: 5px;
+}
 
+ul li:hover {
+  background-color: rgba(63, 78, 93, 0.05);
+}
+
+.regular-checkbox + label{
+  width: 100%;
+}
+.regular-checkbox + label span {
+  margin: 8px;
 }
 
 </style>

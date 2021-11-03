@@ -1,7 +1,6 @@
 package com.home.catalog.mapper;
 
-import com.home.catalog.dto.TagDto;
-import com.home.catalog.dto.VocabularyDto;
+import com.home.catalog.dto.ProductDto;
 import com.home.catalog.entity.Tag;
 import com.home.catalog.entity.Vocabulary;
 import org.mapstruct.Mapper;
@@ -14,13 +13,13 @@ public interface TagMapper {
 
     @Mapping( target = "id", source = "id")
     @Mapping(target = "vocabularyName", source = "vocabulary.name")
-    Tag map(TagDto dto);
+    Tag map(ProductDto.TagDto dto);
 
     @Mapping( target = "id", source = "id")
     @Mapping(target = "vocabularyName", source = "vocabulary.name")
-    Tag map(TagDto dto, @MappingTarget Tag tag);
+    Tag map(ProductDto.TagDto dto, @MappingTarget Tag tag);
 
-    Vocabulary map(VocabularyDto dto);
-    Vocabulary map(VocabularyDto dto, @MappingTarget Vocabulary vocabulary);
+    Vocabulary map(ProductDto.TagDto.VocabularyDto dto);
+    Vocabulary map(ProductDto.TagDto.VocabularyDto dto, @MappingTarget Vocabulary vocabulary);
 
 }

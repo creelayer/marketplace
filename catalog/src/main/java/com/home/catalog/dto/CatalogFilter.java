@@ -15,5 +15,5 @@ public class CatalogFilter {
     private Set<@NotNull Tag> tags = new HashSet<>();
 
     private int page = 0;
-    private int size = 50;
+    private int size = 20;
 }

@@ -32,7 +32,7 @@ public class ProductSearchQuery {
     public List<Product> all() {
         params.addValue("size", pageable.getPageSize())
                 .addValue("offset", pageable.getOffset());
-        return jdbc.query(this.query.toString() + " LIMIT :size OFFSET :offset", params, new ProductRowMapper());
+        return jdbc.query(this.query.toString() + " ORDER BY id LIMIT :size OFFSET :offset", params, new ProductRowMapper());
     }
 
     public ProductSearchQuery andCategory(Tag category) {

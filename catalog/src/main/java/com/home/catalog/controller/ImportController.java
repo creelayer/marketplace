@@ -3,10 +3,10 @@ package com.home.catalog.controller;
 import com.home.catalog.dto.CategoryDto;
 import com.home.catalog.dto.ProductDto;
 import com.home.catalog.dto.Response;
-import com.home.catalog.entity.Category;
 import com.home.catalog.service.CategoryService;
 import com.home.catalog.service.IndexService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +23,13 @@ public class ImportController {
     private final CategoryService categoryService;
 
     @PostMapping("product")
-    public String index(@RequestBody List<@Valid ProductDto> data) {
+    public ResponseEntity<Object> index(@RequestBody List<@Valid ProductDto> data) {
         indexService.index(data);
-        return "Success";
+        return Response.ok();
     }
 
     @PostMapping("category")
-    public Response<Category> create(@Valid @RequestBody CategoryDto dto) {
-        return new Response<>(categoryService.save(dto));
+    public ResponseEntity<Object> create(@Valid @RequestBody CategoryDto dto) {
+        return Response.ok(categoryService.save(dto));
     }
 }

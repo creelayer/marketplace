@@ -1,9 +1,9 @@
 package com.home.catalog.repository.impl;
 
 import com.home.catalog.dto.CatalogFilter;
-import com.home.catalog.dto.ProductDto;
-import com.home.catalog.dto.TagDto;
 import com.home.catalog.entity.Product;
+import com.home.catalog.entity.Tag;
+import com.home.catalog.mapper.impl.ProductRowMapper;
 import com.home.catalog.repository.ProductBatch;
 import com.home.catalog.repository.query.ProductSearchQuery;
 import lombok.AllArgsConstructor;
@@ -11,9 +11,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
-import org.springframework.jdbc.core.namedparam.SqlParameterSource;
-import org.springframework.jdbc.core.namedparam.SqlParameterSourceUtils;
+import org.springframework.jdbc.core.namedparam.*;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,24 +31,28 @@ public class ProductRepositoryImpl implements ProductBatch {
         return new PageImpl<>(query.all(), pageable, query.count());
     }
 
-    public void batchUpsert(List<ProductDto> products) {
-        SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(products);
+    public void batchUpsert(List<Product> products) throws SQLException {
+        ProductRowMapper mapper = new ProductRowMapper();
         jdbc.batchUpdate(
-                "INSERT INTO product (id, name, url, index, created_at, updated_at) VALUES (:id, :name, :url, :tagIds, now(), now()) " +
+                "INSERT INTO product (id, name, url, image, images, index, short_case, created_at, updated_at) " +
+                        "VALUES (:id, :name, :url, :image, :images, :index, :short_case, now(), now()) " +
                         "ON CONFLICT (id) DO UPDATE SET " +
                         "name = excluded.name, \n" +
                         "url = excluded.url, \n" +
+                        "image = excluded.image, \n" +
+                        "images = excluded.images, \n" +
                         "index = excluded.index, \n" +
-                        "updated_at = now();", batch);
+                        "short_case = excluded.short_case, \n" +
+                        "updated_at = now();", mapper.map(products));
     }
 
-    public void updateIndex(List<ProductDto> products) {
+    public void updateIndex(List<Product> products) throws SQLException {
         SqlParameterSource[] batch = SqlParameterSourceUtils.createBatch(products);
         jdbc.batchUpdate("DELETE FROM product_tag WHERE product_id = :id ", batch);
 
         List<Integer[]> productTags = new ArrayList<>();
-        for (ProductDto product : products) {
-            for (TagDto tag : product.getTags()) {
+        for (Product product : products) {
+            for (Tag tag : product.getTags()) {
                 productTags.add(new Integer[]{product.getId(), tag.getId(), tag.getVocabulary().getId()});
             }
         }
@@ -70,4 +72,6 @@ public class ProductRepositoryImpl implements ProductBatch {
                     }
                 });
     }
+
+
 }
