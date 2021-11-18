@@ -5,5 +5,4 @@ public class ProductView extends BaseView {
     }
     public static class View {
     }
-
 }

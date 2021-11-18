@@ -10,11 +10,10 @@ import java.io.Serializable;
 @Setter
 @Getter
 @Entity
-//@Table(indexes = {
-//        @Index(name = "idx_i_product_id", columnList = "productId"),
-//        @Index(name = "idx_i_tag_id", columnList = "tagId"),
-//        @Index(name = "idx_i_vocabulary_id", columnList = "vocabularyId")
-//})
+@Table(indexes = {
+        @Index(name = "idx_i_product_id", columnList = "product_id"),
+        @Index(name = "idx_i_tag_id", columnList = "tag_id"),
+})
 public class ProductTag {
 
     @JsonIgnore
@@ -36,7 +35,7 @@ public class ProductTag {
 
     @Embeddable
     private static class TagIndexKey implements Serializable {
-        public int productId;
+        public long productId;
         public int tagId;
     }
 }

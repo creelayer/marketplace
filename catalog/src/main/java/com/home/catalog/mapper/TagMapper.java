@@ -11,11 +11,9 @@ import org.mapstruct.ReportingPolicy;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface TagMapper {
 
-    @Mapping( target = "id", source = "id")
     @Mapping(target = "vocabularyName", source = "vocabulary.name")
     Tag map(ProductDto.TagDto dto);
 
-    @Mapping( target = "id", source = "id")
     @Mapping(target = "vocabularyName", source = "vocabulary.name")
     Tag map(ProductDto.TagDto dto, @MappingTarget Tag tag);
 

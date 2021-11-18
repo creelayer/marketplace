@@ -7,6 +7,6 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ProductRepository extends CrudRepository<Product, Integer>, ProductBatch, ProductSearch {
+public interface ProductRepository extends CrudRepository<Product, Integer>, Batch<Product>, ProductSearch {
     Optional<Product> findByUrl(String url);
 }
