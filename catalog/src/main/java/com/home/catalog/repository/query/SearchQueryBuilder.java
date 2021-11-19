@@ -10,23 +10,21 @@ import java.util.*;
 
 @Setter
 @Accessors(chain = true)
-public class SearchQueryBuilder {
+public class SearchQueryBuilder extends QueryBuilder {
 
     private String table = "search_index";
 
     private String select = "gid";
     private Tag category;
     private Set<Tag> tags;
-
     private Pageable pageable;
-
 
     public Query createQuery() {
         return new Query()
                 .select(select)
                 .table(table)
                 .category(category)
-                .tags(tags)
+                .map(getVocabularyIndexedTags(tags))
                 .pageable(pageable);
     }
 
@@ -35,13 +33,13 @@ public class SearchQueryBuilder {
                 .select("count(*)")
                 .table(table)
                 .category(category)
-                .tags(tags);
+                .map(getVocabularyIndexedTags(tags));
     }
 
     public static class Query {
 
-        MapSqlParameterSource params = new MapSqlParameterSource();
-        StringBuilder query = new StringBuilder();
+        private final MapSqlParameterSource params = new MapSqlParameterSource();
+        private final StringBuilder query = new StringBuilder();
 
         private Query select(String select) {
             query.append("SELECT ").append(select).append(" ");
@@ -62,19 +60,10 @@ public class SearchQueryBuilder {
             return this;
         }
 
-        private Query tags(Set<Tag> tags) {
-            if (tags.isEmpty()) {
+        private Query map(Map<Integer, List<Integer>> map) {
+            if (map.isEmpty()) {
                 return this;
             }
-
-            Map<Integer, List<Integer>> map = new HashMap<>();
-            for (Tag tag : tags) {
-                if (!map.containsKey(tag.getVocabulary().getId())) {
-                    map.put(tag.getVocabulary().getId(), new ArrayList<>());
-                }
-                map.get(tag.getVocabulary().getId()).add(tag.getId());
-            }
-
             for (var entry : map.entrySet()) {
                 query.append(" AND tags && :tags").append(entry.getKey());
                 params.addValue("tags" + entry.getKey(), entry.getValue().toArray(Integer[]::new));
